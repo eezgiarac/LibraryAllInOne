@@ -81,6 +81,30 @@ public class APIStepDefs {
         for (String eachData : allData) {
             Assert.assertNotNull(eachData);
         }
+
+    }
+    String id;
+    @Given("Path param {string} is {string}")
+    public void path_param_is(String id, String idValue) {
+
+        LOG.info("Id --> " + idValue);
+        givenPart.pathParam(id, idValue);
+        LOG.info("pathparam" + givenPart.pathParam(id, idValue) );
+
+    }
+    @Then("{string} field should be same with path param")
+    public void field_should_be_same_with_path_param(String path) {
+
+        Assert.assertEquals(id,response.path(path));
+
+
+
+    }
+    @Then("following fields should not be null")
+    public void following_fields_should_not_be_null(List<String> dataTable) {
+
+
+
     }
 
 
