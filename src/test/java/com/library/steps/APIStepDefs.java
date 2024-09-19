@@ -41,6 +41,10 @@ public class APIStepDefs {
 
     @When("I send GET request to {string} endpoint")
     public void i_send_get_request_to_endpoint(String endpoint) {
+//        response= givenPart.when().get(ConfigurationReader.getProperty("library.baseUri") + endpoint);
+//        thenPart=response.then();
+        //yukarıdaki ve aşağıdaki aynı.yukarıdakini kısaltmak için hooksa ekledik mehtodu.
+
         LOG.info("Endpoint ---> " + endpoint);
         response = givenPart.when().get(endpoint);
         thenPart = response.then();
@@ -85,25 +89,51 @@ public class APIStepDefs {
     }
     String id;
     @Given("Path param {string} is {string}")
-    public void path_param_is(String id, String idValue) {
+    public void path_param_is(String pathParam, String value) {
 
-        LOG.info("Id --> " + idValue);
-        givenPart.pathParam(id, idValue);
-        LOG.info("pathparam" + givenPart.pathParam(id, idValue) );
+
+        id=value;
+        givenPart.pathParam(pathParam, value);
+        LOG.info("PathParam --> " + pathParam);
 
     }
     @Then("{string} field should be same with path param")
     public void field_should_be_same_with_path_param(String path) {
 
-        Assert.assertEquals(id,response.path(path));
+        Assert.assertEquals(id,jp.getString(path));
 
 
 
     }
     @Then("following fields should not be null")
-    public void following_fields_should_not_be_null(List<String> dataTable) {
+    public void following_fields_should_not_be_null(List<String> paths) {
 
+        for (String path : paths) {
+            //Assert.assertNotNull(jp.getString(path));
+            thenPart.body(path,Matchers.notNullValue());
 
+        }
+
+    }
+
+    @Given("Request Content Type header is {string}")
+    public void request_content_type_header_is(String string) {
+
+    }
+    @Given("I create a random {string} as request body")
+    public void i_create_a_random_as_request_body(String string) {
+
+    }
+    @When("I send POST request to {string} endpoint")
+    public void i_send_post_request_to_endpoint(String string) {
+
+    }
+    @Then("the field value for {string} path should be equal to {string}")
+    public void the_field_value_for_path_should_be_equal_to(String string, String string2) {
+
+    }
+    @Then("{string} field should not be null")
+    public void field_should_not_be_null(String string) {
 
     }
 

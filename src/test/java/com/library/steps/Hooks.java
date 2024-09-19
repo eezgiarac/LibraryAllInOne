@@ -56,7 +56,7 @@ public class Hooks {
     }
 
     @Before()
-    public void setBaseURI(){
+    public void setBaseURI(){ //bunu ekledikten sonra conf.reader get property kısmını yazmamıza gerek yok
         RestAssured.baseURI=ConfigurationReader.getProperty("library.baseUri");
         LOG.info("Base URI is "+RestAssured.baseURI);
     }
