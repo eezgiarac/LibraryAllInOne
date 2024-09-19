@@ -8,6 +8,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
@@ -117,7 +118,9 @@ public class APIStepDefs {
     }
 
     @Given("Request Content Type header is {string}")
-    public void request_content_type_header_is(String string) {
+    public void request_content_type_header_is(String contentType) {
+    givenPart.contentType(contentType);
+    LOG.info("Content Type --> " + contentType);
 
     }
     @Given("I create a random {string} as request body")
@@ -129,8 +132,9 @@ public class APIStepDefs {
 
     }
     @Then("the field value for {string} path should be equal to {string}")
-    public void the_field_value_for_path_should_be_equal_to(String string, String string2) {
+    public void the_field_value_for_path_should_be_equal_to(String message, String expectedMessage) {
 
+        
     }
     @Then("{string} field should not be null")
     public void field_should_not_be_null(String string) {
