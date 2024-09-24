@@ -72,8 +72,8 @@ public class Driver {
                     //WebDriverManager.chromedriver().setup();
                     ChromeOptions options = new ChromeOptions();
                     options.addArguments("--ignore-certificate-errors","--disable-search-engine-choice-screen");
-                    driverPool.set(new ChromeDriver());
-                    driverPool.get().manage().window().maximize();
+//                    WebDriverManager.chromedriver().setup();
+                    driverPool.set(new ChromeDriver(options));
                     driverPool.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
                     break;
                 case "firefox":
