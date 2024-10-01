@@ -2,6 +2,7 @@ package com.library.steps;
 
 
 import com.library.pages.BookPage;
+import com.library.pages.LoginPage;
 import com.library.utility.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -36,13 +37,15 @@ public class APIStepDefs {
 
     @Given("I logged Library api as a {string}")
     public void i_logged_library_api_as_a(String role) {
-        givenPart.header("x-library-token", LibraryAPI_Util.getToken(role));
+        //givenPart.header("x-library-token", LibraryAPI_Util.getToken(role));
+        givenPart.header(HeaderConstants.X_LIBRARY_TOKEN, LibraryAPI_Util.getToken(role));
         LOG.info("Token is generated as " + role);
     }
 
     @Given("Accept header is {string}")
     public void accept_header_is(String acceptHeader) {
         givenPart.accept(acceptHeader);
+        //givenPart.header("Accept", acceptHeader);
 
     }
 
@@ -211,9 +214,14 @@ public class APIStepDefs {
 
      */
 
+
+    /**
+     * US03-2
+     */
+
     @Then("UI, Database and API created book information must match")
     public void ui_database_and_api_created_book_information_must_match() throws SQLException {
-         //burda db deki actual olan ve biz bilgileri ua da girdiğimiz için oda aynı şekilde actual olacak.
+
         // API - EXPECTED - GET FROM REQUEST BODY
         LOG.info("EXPECTED BOOK DATA from API "+randomData);
         System.out.println("API = " + randomData);
@@ -278,4 +286,84 @@ public class APIStepDefs {
 
 
     }
+
+    /**
+     * US-4-2
+     */
+    @Then("created user information should match with Database")
+    public void created_user_information_should_match_with_database() {
+        //get the data from user id from api response
+        // Actual --> DB --> API Response --> user_id
+        int id = jp.getInt("user_id");
+        LOG.info("User ID from API Response --> "+id);
+
+        String query=DatabaseHelper.getUserByIdQuery(id);
+        LOG.info(query);
+
+        DB_Util.runQuery(query);
+        Map<String, Object> dbMap = DB_Util.getRowMap(1);
+        LOG.info("Database Body --> "+dbMap);
+
+        // Expected --> API --> randomData --> map
+
+        // Keep password for login into following step
+        //burda casting yaparak datayı tuttuk silmedik yani
+        String password= (String) randomData.remove("password");
+
+        LOG.info("API Body --> "+randomData);
+
+        Assert.assertEquals(randomData,dbMap);
+
+        // Add password into randomData
+        randomData.put("password",password);
+
+
+
+    }
+    @Then("created user should be able to login Library UI")
+    public void created_user_should_be_able_to_login_library_ui() {
+
+        LoginPage loginPage=new LoginPage();
+
+        String email = (String) randomData.get("email");
+        LOG.info("Email is used for UI LOGIN--"+email);
+
+        String password = (String) randomData.get("password");
+        LOG.info("Password is used for UI LOGIN--"+password);
+
+        loginPage.login(email,password);
+
+
+
+    }
+    @Then("created user name should appear in Dashboard Page")
+    public void created_user_name_should_appear_in_dashboard_page() {
+
+        BookPage bookPage=new BookPage();
+
+        String uiFullName = bookPage.accountHolderName.getText();
+        LOG.info("UI FullName --> "+uiFullName);
+
+        String apiFullName = (String) randomData.get("full_name");
+        LOG.info("API FullName --> "+apiFullName);
+
+        Assert.assertEquals(apiFullName,uiFullName);
+
+    }
+
+    /**
+     * US05
+     */
+    String token;
+    @Given("I logged Library api with credentials {string} and {string}")
+    public void i_logged_library_api_with_credentials_and(String email, String password) {
+        token = LibraryAPI_Util.getToken(email, password);
+        LOG.info("Token --> "+token);
+    }
+    @Given("I send {string} information as request body")
+    public void i_send_token_information_as_request_body(String key) {
+        givenPart.formParam(key,token);
+    }
+
+
 }

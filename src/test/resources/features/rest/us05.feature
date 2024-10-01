@@ -22,3 +22,18 @@ Feature: : As a user, I want to view my own user information using the API
       | librarian10@library  | libraryUser | 2             |
       | student10@library    | libraryUser | 3             |
       | librarian13@library | libraryUser | 2             |
+
+
+
+  ##Scenario:
+ # Given
+ # When
+    #Then "ROOMS_NAME" should not be null
+#yukarıdaki senaryo için aşağıdakini yapabilirz.
+  #@Then..
+  #{
+
+  #List<String> allRoomsName=jp.getList(PathConstants.ROOMS_NAME);
+
+
+  #}
